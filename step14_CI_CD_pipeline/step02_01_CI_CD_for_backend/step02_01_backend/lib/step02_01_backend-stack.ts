@@ -1,15 +1,16 @@
-import * as cdk from '@aws-cdk/core';
-// import * as sqs from '@aws-cdk/aws-sqs';
+import * as cdk from "@aws-cdk/core";
+import * as lambda from "@aws-cdk/aws-lambda";
 
 export class Step0201BackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'Step0201BackendQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    const hello = new lambda.Function(this, "HelloHandler", {
+      functionName: "LambdaFunction",
+      runtime: lambda.Runtime.NODEJS_14_X,
+      // in case we need to upload something, a file or code we need to call fromAsset
+      code: lambda.Code.fromAsset("lambda"),
+      handler: "hello.handler",
+    });
   }
 }
