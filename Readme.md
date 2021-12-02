@@ -8,6 +8,8 @@ CI/CD is among core of devops (set of practice to build and deploy). CI/CD autom
 
 ### Sections
 
+- [CI CD pipeline](./step14_CI_CD_pipeline)
+
 ### Reading Material
 
 - [CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts.html#concepts-stages)
