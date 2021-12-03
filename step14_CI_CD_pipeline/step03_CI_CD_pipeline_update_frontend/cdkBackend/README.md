@@ -16,9 +16,10 @@ In this step we are setting up a complete CI/CD pipeline for the deployment of G
    ```js
    import * as s3 from "@aws-cdk/aws-s3";
    const myBucket = new s3.Bucket(this, "GatsbyBucket", {
-     bucketName: "GatsbyBucket",
+     bucketName: "gatsbybucket",
      versioned: true,
      websiteIndexDocument: "index.html",
+     publicReadAccess: true,
    });
    ```
 
@@ -92,14 +93,14 @@ In this step we are setting up a complete CI/CD pipeline for the deployment of G
 
     ```js
     import * as CodeBuild from "@aws-cdk/aws-codebuild";
-    const cdkBuild = new CodeBuild.PipelineProject(this, "s3Build", {
+    const s3Build = new CodeBuild.PipelineProject(this, "s3Build", {
       projectName: "step14-03-build-project",
       buildSpec: CodeBuild.BuildSpec.fromObject({
         version: "0.2",
         phases: {
           install: {
             "runtime-versions": {
-              nodejs: 15,
+              nodejs: 14,
             },
             commands: [
               "cd step14_CI_CD_pipeline",
@@ -120,7 +121,7 @@ In this step we are setting up a complete CI/CD pipeline for the deployment of G
         },
       }),
       environment: {
-        buildImage: CodeBuild.LinuxBuildImage.STANDARD_3_0,
+        buildImage: CodeBuild.LinuxBuildImage.STANDARD_5_0,
       },
     });
     ```
