@@ -15,7 +15,7 @@ export class CdkBackendStack extends cdk.Stack {
     // Deploy Gatsby on S3 bucket
     // create new bucket
     const myBucket = new s3.Bucket(this, "GatsbyBucket", {
-      bucketName: "GatsbyBucket",
+      bucketName: "gatsbybucket",
       versioned: true,
       websiteIndexDocument: "index.html",
     });
