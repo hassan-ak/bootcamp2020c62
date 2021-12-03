@@ -4,6 +4,7 @@ import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import * as origions from "@aws-cdk/aws-cloudfront-origins";
 import * as s3Deployment from "@aws-cdk/aws-s3-deployment";
 import * as CodePipeline from "@aws-cdk/aws-codepipeline";
+import * as CodePipelineAction from "@aws-cdk/aws-codepipeline-actions";
 
 export class CdkBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -32,6 +33,9 @@ export class CdkBackendStack extends cdk.Stack {
       value: dist.domainName,
     });
 
+    // Artifacts
+    const sourceOutput = new CodePipeline.Artifact();
+
     // Pipeline
     // Create Pipeline
     const pipeline = new CodePipeline.Pipeline(this, "GtasbyPipeline", {
@@ -39,5 +43,22 @@ export class CdkBackendStack extends cdk.Stack {
       crossAccountKeys: false,
       restartExecutionOnUpdate: true,
     });
+
+    // Stages
+    // FirstStage
+    pipeline.addStage({
+      stageName: "SourceStage",
+      actions: [
+        new CodePipelineAction.GitHubSourceAction({
+          actionName: "Checkout",
+          owner: "hassan-ak",
+          repo: "bootcamp2020c62",
+          oauthToken: cdk.SecretValue.secretsManager("Github-Personal-Secret"),
+          output: sourceOutput,
+          branch: "main",
+        }),
+      ],
+    });
+    // Second Stage
   }
 }
