@@ -5,6 +5,8 @@ import * as origions from "@aws-cdk/aws-cloudfront-origins";
 import * as s3Deployment from "@aws-cdk/aws-s3-deployment";
 import * as CodePipeline from "@aws-cdk/aws-codepipeline";
 import * as CodePipelineAction from "@aws-cdk/aws-codepipeline-actions";
+import * as CodeBuild from "@aws-cdk/aws-codebuild";
+import { PolicyStatement } from "@aws-cdk/aws-iam";
 
 export class CdkBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -35,6 +37,45 @@ export class CdkBackendStack extends cdk.Stack {
 
     // Artifacts
     const sourceOutput = new CodePipeline.Artifact();
+
+    // Build Function
+    const s3Build = new CodeBuild.PipelineProject(this, "s3Build", {
+      projectName: "step14-03-build-project",
+      buildSpec: CodeBuild.BuildSpec.fromObject({
+        version: "0.2",
+        phases: {
+          install: {
+            "runtime-versions": {
+              nodejs: 12,
+            },
+            commands: [
+              "cd step14_CI_CD_pipeline",
+              "cd step03_CI_CD_pipeline_update_frontend",
+              "cd gatsbyfrontend",
+              "npm i -g gatsby",
+              "npm install",
+            ],
+          },
+          build: {
+            commands: ["gatsby build"],
+          },
+        },
+        artifacts: {
+          "base-directory":
+            "./step14_CI_CD_pipeline/step03_CI_CD_pipeline_update_frontend/gatsbyfrontend/public",
+          files: [`**/*`],
+        },
+      }),
+      environment: {
+        buildImage: CodeBuild.LinuxBuildImage.STANDARD_3_0,
+      },
+    });
+
+    // Policy and role creation and assignment
+    const policy = new PolicyStatement();
+    policy.addActions("s3:*");
+    policy.addResources("*");
+    s3Build.addToRolePolicy(policy);
 
     // Pipeline
     // Create Pipeline
