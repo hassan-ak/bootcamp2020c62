@@ -47,7 +47,7 @@ export class CdkBackendStack extends cdk.Stack {
         phases: {
           install: {
             "runtime-versions": {
-              nodejs: 12,
+              nodejs: 15,
             },
             commands: [
               "cd step14_CI_CD_pipeline",
