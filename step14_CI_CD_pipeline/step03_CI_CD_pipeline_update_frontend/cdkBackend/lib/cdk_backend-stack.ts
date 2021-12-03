@@ -113,5 +113,16 @@ export class CdkBackendStack extends cdk.Stack {
         }),
       ],
     });
+    // Third Stage
+    pipeline.addStage({
+      stageName: "DepolyStage",
+      actions: [
+        new CodePipelineAction.S3DeployAction({
+          actionName: "s3Build",
+          input: S3Output,
+          bucket: myBucket,
+        }),
+      ],
+    });
   }
 }
