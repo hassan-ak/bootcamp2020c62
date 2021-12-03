@@ -1,5 +1,10 @@
 import React from "react";
 
 export default function Home() {
-  return <div>Home Page for CI/CD Deployment</div>;
+  return (
+    <div>
+      <h1>Home Page for CI/CD Deployment</h1>
+      <p>Update for CI/CD testing</p>
+    </div>
+  );
 }
