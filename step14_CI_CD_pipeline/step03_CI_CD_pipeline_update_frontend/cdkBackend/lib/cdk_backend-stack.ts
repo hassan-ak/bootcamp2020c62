@@ -3,6 +3,7 @@ import * as s3 from "@aws-cdk/aws-s3";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import * as origions from "@aws-cdk/aws-cloudfront-origins";
 import * as s3Deployment from "@aws-cdk/aws-s3-deployment";
+import * as CodePipeline from "@aws-cdk/aws-codepipeline";
 
 export class CdkBackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -24,6 +25,19 @@ export class CdkBackendStack extends cdk.Stack {
       sources: [s3Deployment.Source.asset("../gatsbyfrontend/public")],
       destinationBucket: myBucket,
       distribution: dist,
+    });
+
+    // URL Ouput on Display
+    new cdk.CfnOutput(this, "CloudFrontUrl", {
+      value: dist.domainName,
+    });
+
+    // Pipeline
+    // Create Pipeline
+    const pipeline = new CodePipeline.Pipeline(this, "GtasbyPipeline", {
+      pipelineName: "step14-03-pipeline",
+      crossAccountKeys: false,
+      restartExecutionOnUpdate: true,
     });
   }
 }
