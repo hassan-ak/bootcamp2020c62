@@ -18,6 +18,7 @@ export class CdkBackendStack extends cdk.Stack {
       bucketName: "gatsbybucket",
       versioned: true,
       websiteIndexDocument: "index.html",
+      publicReadAccess: true,
     });
     // create Cloudfront distribution
     const dist = new cloudfront.Distribution(this, "GatsbyDistribution", {
