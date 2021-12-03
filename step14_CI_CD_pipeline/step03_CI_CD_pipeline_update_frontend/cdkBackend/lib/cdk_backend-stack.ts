@@ -37,6 +37,7 @@ export class CdkBackendStack extends cdk.Stack {
 
     // Artifacts
     const sourceOutput = new CodePipeline.Artifact();
+    const S3Output = new CodePipeline.Artifact();
 
     // Build Function
     const s3Build = new CodeBuild.PipelineProject(this, "s3Build", {
@@ -101,5 +102,16 @@ export class CdkBackendStack extends cdk.Stack {
       ],
     });
     // Second Stage
+    pipeline.addStage({
+      stageName: "BuildStage",
+      actions: [
+        new CodePipelineAction.CodeBuildAction({
+          actionName: "s3Build",
+          project: s3Build,
+          input: sourceOutput,
+          outputs: [S3Output],
+        }),
+      ],
+    });
   }
 }
